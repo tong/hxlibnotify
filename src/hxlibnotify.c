@@ -26,17 +26,19 @@ static value hxlibnotify_get_app_name() {
 }
 
 static value hxlibnotify_get_server_caps() {
-	//TODO
-	/*
-	 GList *list = notify_get_server_caps();
-	 GList *elem;
-	 char * item;
-	 for(elem = list; elem; elem = list->next) {
-	 item = elem->data;
-	 printf("##################################################%s\n",item);
-	 }
-	 */
-	return val_null;
+	value r;
+	guint len;
+	GList *list = notify_get_server_caps();
+	GList *elem;
+	char * item;
+	len = g_list_length(list);
+	r = alloc_array(len);
+	int i = 0;
+	for(elem = list; elem; elem = elem->next) {
+		item = elem->data;
+		val_array_ptr(r)[i++] = alloc_string(item);
+	}
+	return r;
 }
 
 static value hxlibnotify_get_server_info() {

@@ -17,12 +17,9 @@ typedef Error = {
 
 class Lib {
 	
-	public static function init( appName : String ) : Bool {
-		_init( untyped appName.__s );
-		return false; //TODO
-	}
-	
-	public static inline function getServerCaps() : List<String> return _get_server_caps()
+	public static inline function init( appName : String ) : Bool return _init( untyped appName.__s )
+	public static inline function uninit() _uninit()
+	public static inline function getServerCaps() : Array<String> return neko.Lib.nekoToHaxe( _get_server_caps() )
 	public static inline function getServerInfo() : ServerInfo return _get_server_info()
 	
 	public static function x( f : String, args : Int = 0 ) : Dynamic {
