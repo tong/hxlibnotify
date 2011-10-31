@@ -17,12 +17,12 @@ class Notification {
 		__i = _create( untyped summary.__s, untyped body.__s, untyped icon.__s , timeout, untyped category.__s );
 	}
 	
-	public inline function show() _show(__i)
+	public inline function show() : Bool return _show(__i)
 	public inline function update( summary : String, body : String, icon : String ) : Bool return _update(__i, untyped summary.__s, untyped body.__s, untyped icon.__s )
 	public inline function setTimeout(v:Int) _set_timeout(__i,v)
 	public inline function setCategory(v:String) _set_catgeory(__i,untyped v.__s)
 	public inline function setUrgency(v:NotificationUrgency) _set_urgency(__i,Type.enumIndex(v))
-	
+
 	public inline function close() _close(__i)
 	public function addAction( action : String, label : String, cb : Void->Void, ?userData : Dynamic ) {
 		_add_action( __i, untyped action.__s, untyped action.__s, cb, userData );

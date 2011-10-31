@@ -1,12 +1,9 @@
-
 #include <stdio.h>
 #include <glib.h>
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
-//#include <gdk-pixbuf/gdk-pixbuf.h>
 #include <libnotify/notify.h>
 #include <neko.h>
-
 //#define IMPLEMENT_API
 //#include <hx/CFFI.h>
 
@@ -23,7 +20,7 @@ static value hxlibnotify_init(value appName) {
 
 static value hxlibnotify_uninit() {
 	notify_uninit();
-	//free_root();
+	//free_root(); //TODO
 	return val_null;
 }
 
@@ -129,7 +126,9 @@ static value hxlibnotify_notification_show(value n) {
 	notify_notification_show(val_data(n), &err);
 	//printf("%s\n",err->);
 	//TODO handle error
-	return val_null;
+	if (err != NULL)
+		return val_false;
+	return val_true;
 }
 
 static value hxlibnotify_notification_set_timeout(value n, value v) {
@@ -155,15 +154,15 @@ static value hxlibnotify_notification_set_urgency(value n, value v) {
 }
 
 /*
-static value hxlibnotify_notification_set_icon_from_file(value n, value path) {
-	//TODO
+ static value hxlibnotify_notification_set_icon_from_file(value n, value path) {
+ //TODO
 
-	GdkPixbuf * pb;
-	//notify_notification_set_image_from_pixbuf(val_data(n),pb));
+ GdkPixbuf * pb;
+ //notify_notification_set_image_from_pixbuf(val_data(n),pb));
 
-	return val_null;
-}
-*/
+ return val_null;
+ }
+ */
 
 /*
  static value hxlibnotify_notification_set_icon_from_pixbuf(value n, value pb) {
@@ -179,8 +178,8 @@ static void cb_action(NotifyNotification *n, char *action, gpointer user_data) {
 
 static value hxlibnotify_notification_add_action(value n, value action,
 		value label, value cb, value user_data) {
-	if (!is_notification(n)) neko_error();
-	val_check(action, string);
+	if (!is_notification(n))
+		neko_error();val_check(action, string);
 	val_check(action, string);
 	val_check(label, string);
 	val_check_function(cb, 0);
@@ -222,7 +221,7 @@ DEFINE_PRIM( hxlibnotify_notification_set_category, 2);
 DEFINE_PRIM( hxlibnotify_notification_set_urgency, 2);
 
 /*
-//DEFINE_PRIM( hxlibnotify_notification_set_icon_from_pixbuf, 2);
+ //DEFINE_PRIM( hxlibnotify_notification_set_icon_from_pixbuf, 2);
  DEFINE_PRIM( hxlibnotify_set_image_from_pixbuf, 2);
  DEFINE_PRIM( hxlibnotify_set_hint, 3);
  DEFINE_PRIM( hxlibnotify_set_hint_int32, 3);
