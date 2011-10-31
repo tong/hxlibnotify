@@ -22,7 +22,7 @@ class Lib {
 	public static inline function getServerCaps() : Array<String> return neko.Lib.nekoToHaxe( _get_server_caps() )
 	public static inline function getServerInfo() : ServerInfo return _get_server_info()
 	
-	public static function x( f : String, args : Int = 0 ) : Dynamic {
+	public static function load( f : String, args : Int = 0 ) : Dynamic {
 		#if cpp
 		return cpp.Lib.load( "libnotify", "hxlibnotify_"+f, args );
 		#elseif neko
@@ -30,11 +30,11 @@ class Lib {
 		#end
 	}
 	
-	static var _init = x( "init", 1 );
-	static var _uninit = x( "uninit" );
-	static var _is_initted = x( "is_initted" );
-	static var _get_app_name = x( "get_app_name" );
-	static var _get_server_caps = x( "get_server_caps" );
-	static var _get_server_info = x( "get_server_info" );
+	static var _init = load( "init", 1 );
+	static var _uninit = load( "uninit" );
+	static var _is_initted = load( "is_initted" );
+	static var _get_app_name = load( "get_app_name" );
+	static var _get_server_caps = load( "get_server_caps" );
+	static var _get_server_info = load( "get_server_info" );
 	
 }

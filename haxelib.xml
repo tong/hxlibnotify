@@ -1,0 +1,5 @@
+<project name="hxlibnotify" url="https://github.com/tong/hxlibnotify" license="Public">
+	<user name="tong"/>
+	<description>HaXe/Neko libnotify bindings</description>
+	<version name="0.1">Initial release</version>
+</project>

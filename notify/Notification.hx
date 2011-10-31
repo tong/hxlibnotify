@@ -1,7 +1,10 @@
 package notify;
 
-//TODO
-//http://developer.gnome.org/libnotify/0.7/NotifyNotification.html
+enum NotificationUrgency {
+	low;
+	normal;
+	critical;
+}
 
 class Notification {
 	
@@ -21,7 +24,9 @@ class Notification {
 	public inline function setUrgency(v:NotificationUrgency) _set_urgency(__i,Type.enumIndex(v))
 	
 	public inline function close() _close(__i)
-	//public function addAction( action : String, label : String, cb : Void->Void, userData : ) {
+	public function addAction( action : String, label : String, cb : Void->Void, ?userData : Dynamic ) {
+		_add_action( __i, untyped action.__s, untyped action.__s, cb, userData );
+	}
 	
 	static var _create = x( "create", 4 );
 	static var _update = x( "update", 3 );
@@ -29,9 +34,9 @@ class Notification {
 	static var _set_timeout = x( "set_timeout", 1 );
 	static var _set_catgeory = x( "set_category", 1 );
 	static var _set_urgency = x( "set_urgency", 1 );
-	
+	static var _add_action = x( "add_action", 4 );
 	static var _close = x( "close" );
 	
-	static function x( f : String, args : Int = 0 ) : Dynamic return notify.Lib.x( "notification_"+f, 1+args )
+	static function x( f : String, args : Int = 0 ) : Dynamic return notify.Lib.load( "notification_"+f, 1+args )
 	
 }

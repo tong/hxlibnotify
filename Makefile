@@ -1,31 +1,38 @@
 
+LIBNAME = libnotify
 OS = Linux
-ifeq (${WIN32},1)
-OS = Windows
-endif
-ifeq (${MACOSX},1)
-OS = Mac
-endif
-
 INSTALL_PATH = /usr/lib/neko/
-CFLAGS = -Wall -O3 -fPIC -g -O #-finline-functions
-NDLL = ndll/$(OS)/libnotify.ndll
-PKG = `pkg-config --cflags --libs glib-2.0 --libs gtk+-2.0`
-LIBS = -Iinclude -I/usr/include -I/usr/lib/neko/include -I/usr/include/glib-2.0 -I/usr/include/gtk-2.0 -I/usr/include/libnotify
-SRC = src/hxlibnotify.c
 
-all: ndll
+CFLAGS = -shared -Wall -g #-Wall -O3 -fPIC -g -O #-finline-functions
+NDLL = ndll/${OS}/${LIBNAME}.ndll
+PKG_CONFIG = `pkg-config --cflags --libs gtk+-2.0`
+LDFLAGS = -Iinclude -I/usr/lib/neko/include
+OBJ = src/hxlibnotify.o
 
-ndll : $(SRC) Makefile
-	${CC} -shared ${CFLAGS} -o ${NDLL} ${SRC} -l notify ${LIBS} ${PKG}
+all : ndll
 
-hxcpp:
-	haxelib run hxcpp hxcpp.xml
+%.o : %.c
+	$(CC) $(CFLAGS) $(LDFLAGS) $(PKG_CONFIG) -c -o $@ $<
+	
+ndll : $(OBJ)
+	$(CC) $(CFLAGS) -o $(NDLL) $(OBJ) -l notify
+		
+tests: tests/* Makefile
+	(cd tests; haxe build.hxml)
+	
+tests-run : tests
+	(cd tests; neko $(LIBNAME)_test.n)
 
+doc:
+	(cd doc; haxe build.hxml)
+	
 install: ndll
-	cp $(NDLL) /usr/lib/neko/
+	cp $(NDLL) $(INSTALL_PATH)
 	
 clean:
 	rm -f $(NDLL)
+	rm -f tests/*.n
+	rm -f doc/*.xml doc/*.n doc/index.html
+	rm -rf doc/content
 	
-.PHONY: ndll hxcpp install clean
+.PHONY: all ndll install tests tests-run doc clean
