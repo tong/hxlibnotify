@@ -1,15 +1,20 @@
+
 #include <stdio.h>
 #include <glib.h>
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
 #include <libnotify/notify.h>
 #include <neko.h>
+
 //#define IMPLEMENT_API
 //#include <hx/CFFI.h>
 
 DEFINE_KIND(k_notification);
 
 #define is_notification(n) ( val_is_abstract(n) && val_is_kind(n,k_notification) )
+
+//#define val_null(n) ( alloc_null() )
+
 
 /////// ---> notify --->
 
@@ -21,6 +26,7 @@ static value hxlibnotify_init(value appName) {
 static value hxlibnotify_uninit() {
 	notify_uninit();
 	//free_root(); //TODO
+	//return alloc_null();
 	return val_null;
 }
 
@@ -69,6 +75,7 @@ static value hxlibnotify_get_server_info() {
 	g_free(spec_version);
 	if (b)
 		return o;
+	//return alloc_null();
 	return val_null;
 }
 
@@ -128,6 +135,7 @@ static value hxlibnotify_notification_show(value n) {
 	//TODO handle error
 	if (err != NULL)
 		return val_false;
+	//return alloc_null();
 	return val_true;
 }
 
@@ -136,6 +144,7 @@ static value hxlibnotify_notification_set_timeout(value n, value v) {
 		neko_error();
 	}val_check(n, int);
 	notify_notification_set_timeout(val_data(n), val_int(v));
+	//return alloc_null();
 	return val_null;
 }
 
@@ -143,6 +152,7 @@ static value hxlibnotify_notification_set_category(value n, value v) {
 	if (!val_is_abstract(k_notification))
 		neko_error();val_check(n, string);
 	notify_notification_set_timeout(val_data(n), val_int(v));
+	//return alloc_null();
 	return val_null;
 }
 
@@ -150,6 +160,7 @@ static value hxlibnotify_notification_set_urgency(value n, value v) {
 	if (!val_is_abstract(k_notification))
 		neko_error();val_check(n, int);
 	notify_notification_set_timeout(val_data(n), val_int(v));
+	//return alloc_null();
 	return val_null;
 }
 
@@ -188,6 +199,7 @@ static value hxlibnotify_notification_add_action(value n, value action,
 //	       function_storage = alloc_root(1);
 	notify_notification_add_action(val_data(n), val_string(action),
 			val_string(label), cb_action, NULL, NULL);
+	//return alloc_null();
 	return val_null;
 }
 
@@ -196,6 +208,7 @@ static value hxlibnotify_notification_clear_actions(value n) {
 		neko_error();
 	}
 	notify_notification_clear_actions(val_data(n));
+	//return alloc_null();
 	return val_null;
 }
 
@@ -206,10 +219,12 @@ static value hxlibnotify_notification_close(value n) {
 	GError *err = NULL;
 	notify_notification_close(val_data(n), &err);
 	if (err != NULL)
-		return val_false;
+		return alloc_bool(FALSE);
+		//return val_false;
 	//TODO free neko
 	//free_data( val_data(n) ); //finalize_notification(n);
 	val_kind(n) = NULL;
+	//return alloc_bool(TRUE);
 	return val_true;
 }
 
@@ -219,7 +234,6 @@ DEFINE_PRIM( hxlibnotify_notification_show, 1);
 DEFINE_PRIM( hxlibnotify_notification_set_timeout, 2);
 DEFINE_PRIM( hxlibnotify_notification_set_category, 2);
 DEFINE_PRIM( hxlibnotify_notification_set_urgency, 2);
-
 /*
  //DEFINE_PRIM( hxlibnotify_notification_set_icon_from_pixbuf, 2);
  DEFINE_PRIM( hxlibnotify_set_image_from_pixbuf, 2);
