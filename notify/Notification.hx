@@ -1,5 +1,7 @@
 package notify;
 
+import neko.Sys;
+
 enum NotificationUrgency {
 	low;
 	normal;
@@ -14,7 +16,11 @@ class Notification {
 	
 	public function new( summary : String, body : String, icon : String, timeout : Int = 3000, ?category : String ) {
 		if( category == null ) category = defaultCategory;
-		__i = _create( untyped summary.__s, untyped body.__s, untyped icon.__s , timeout, untyped category.__s );
+		__i = _create( untyped summary.__s,
+					   untyped body.__s,
+					   untyped (Sys.getCwd()+icon).__s,
+					   timeout,
+					   untyped category.__s );
 	}
 	
 	public inline function show() : Bool return _show(__i)
