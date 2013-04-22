@@ -12,7 +12,7 @@ uname_M := $(shell sh -c 'uname -m 2>/dev/null || echo not')
 ifeq (${uname_M},x86_64)
 OS := Linux64
 NDLL_FLAGS += -DHXCPP_M64
-#HXCPP_FLAGS += -D HXCPP_M64
+HXCPP_FLAGS += -D HXCPP_M64
 else
 OS := Linux
 endif
