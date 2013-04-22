@@ -12,6 +12,7 @@ enum NotificationUrgency {
 	critical;
 }
 
+@:require(sys)
 class Notification {
 
 	public static var defaultCategory = 'libnotify';

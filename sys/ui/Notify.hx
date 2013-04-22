@@ -13,6 +13,7 @@ typedef NotifyServerInfo = {
 	var spec_version : String;
 }
 
+@:require(sys)
 class Notify {
 
 	public static function init( appName : String ) : Bool {
