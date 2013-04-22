@@ -1,9 +1,0 @@
-
--cp ../
--neko temp.n
-notify.Lib
-notify.Notification
--xml hxlibnotify.xml 
--cmd haxedoc hxlibnotify.xml -f notify
--cmd rm temp.n
--cmd echo Done

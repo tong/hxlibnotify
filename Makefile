@@ -1,31 +1,55 @@
 
-OS := $(shell uname)
-PROJECT := libnotify
-NDLL = ndll/$(OS)/$(PROJECT).ndll
-INSTALL_PATH = /usr/lib/neko
-OBJS = src/hxlibnotify.o
+#
+# hxlibnotify
+#
+# For debug build set: debug=true
+#
 
-all: build
+OS = Linux
+NDLL_FLAGS =
 
-%.o: %.c
-	$(CC) -O3 -Iinclude -I/usr/lib/neko/include $(shell pkg-config --cflags gtk+-2.0 libnotify) -c -o $@ $<
+uname_M := $(shell sh -c 'uname -m 2>/dev/null || echo not')
+ifeq (${uname_M},x86_64)
+OS := Linux64
+NDLL_FLAGS += -DHXCPP_M64
+#HXCPP_FLAGS += -D HXCPP_M64
+else
+OS := Linux
+endif
+NDLL = ndll/$(OS)/libnotify.ndll
+HX_TEST = haxe -main TestLibnotify -cp ../ $(HXCPP_FLAGS)
 
-$(NDLL): $(OBJS)
-	$(CC) -shared -o $(NDLL) $(OBJS) $(shell pkg-config --libs libnotify)
-	
-build: $(NDLL)
+ifeq (${debug},true)
+HX_TEST += -debug
+else
+HX_TEST += --no-traces -dce full
+endif
 
+all: ndll test
 
-install: build
-	cp $(NDLL) $(INSTALL_PATH)
+$(NDLL): src/*.cpp
+	(cd src;haxelib run hxcpp build.xml $(NDLL_FLAGS);)
 
-update: clean build
+ndll: $(NDLL)
+	cp $(NDLL) test/
 
-doc:
-	(cd doc; haxe build.hxml)
-	
+test: $(NDLL) test/TestLibnotify.hx
+	@(cd test;$(HX_TEST) -neko libnotify-test.n)
+	@(cd test;$(HX_TEST) -cpp bin)
+	mv test/bin/TestLibnotify test/libnotify-test
+	cp $(NDLL) test/
+
+doc: sys/*.hx
+	haxe -neko libinotify.n sys.Notify sys.Notification --no-output -xml libnotify-api.xml #TODO use macro to add doc classes
+	mkdir -p doc
+	cd doc && haxedoc ../libnotify-api.xml -f sys
+
 clean:
-	rm -f src/*.o $(NDLL)
-	rm -f doc/*.xml doc/*.n doc/index.html && rm -rf doc/content
-	
-.PHONY: all build install doc clean
+	rm -rf ndll/
+	rm -rf src/obj
+	rm -f src/all_objs
+	rm -rf test/bin
+	rm -f test/libnotify*
+	rm -rf doc
+
+.PHONY: ndll test doc clean

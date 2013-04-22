@@ -1,5 +1,0 @@
-
--cp ../../hxgtk
--cp ../
--neko libnotify_test.n
--main TestLibnotify

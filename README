@@ -1,9 +1,5 @@
 
 HXLIBNOTIFY
 ===========
-HaXe/Neko libnotify bindings
-
-
-LINKS
------
+Haxe/Cpp/Neko libnotify bindings
 http://developer.gnome.org/libnotify
