@@ -1,4 +1,4 @@
-package sys;
+package sys.ui;
 
 #if cpp
 import cpp.Lib;

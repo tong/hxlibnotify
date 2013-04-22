@@ -40,9 +40,9 @@ test: $(NDLL) test/TestLibnotify.hx
 	cp $(NDLL) test/
 
 doc: sys/*.hx
-	haxe -neko libinotify.n sys.Notify sys.Notification --no-output -xml libnotify-api.xml #TODO use macro to add doc classes
+	haxe -neko libinotify.n sys.ui.Notify sys.ui.Notification --no-output -xml libnotify-api.xml #TODO use macro to add doc classes
 	mkdir -p doc
-	cd doc && haxedoc ../libnotify-api.xml -f sys
+	cd doc && haxedoc ../libnotify-api.xml -f sys.ui
 
 clean:
 	rm -rf ndll/
@@ -53,3 +53,4 @@ clean:
 	rm -rf doc
 
 .PHONY: ndll test doc clean
+

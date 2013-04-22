@@ -1,6 +1,6 @@
 
-import sys.Notify;
-import sys.Notification;
+import sys.ui.Notify;
+import sys.ui.Notification;
 
 class TestLibnotify {
 	
@@ -21,5 +21,6 @@ class TestLibnotify {
 			
 			Notify.uninit();
 		}
+		
 	}
 }
