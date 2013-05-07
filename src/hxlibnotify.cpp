@@ -12,19 +12,18 @@
 DEFINE_KIND( k_notification );
 
 static value hxlibnotify_init( value app_name ) {
-	const char *name = val_string( app_name );
-	gboolean ok = notify_init( name );
-	return ok ? val_true : val_false;
+	gboolean ok = notify_init( val_string( app_name ) );
+	return alloc_int(ok);
 }
 
 static value hxlibnotify_uninit() {
 	notify_uninit();
 	//free_root();
-	return alloc_null();
+	return alloc_int(1);
 }
 
 static value hxlibnotify_is_initted() {
-	return alloc_bool( notify_is_initted() );
+	return alloc_int( notify_is_initted() ); //alloc_bool( notify_is_initted() );
 }
 
 static value hxlibnotify_get_app_name() {
@@ -111,9 +110,10 @@ static value hxlibnotify_notification_update( value n, value _summary, value _bo
 }
 
 static value hxlibnotify_notification_show( value n ) {
+	//printf("hxlibnotify_notification_show\n");
 	GError *err = NULL;
 	notify_notification_show( (NotifyNotification *) val_data(n), &err );
-	return alloc_bool( err != NULL );
+	return alloc_int( ( err != NULL ) ? 0 : 1 ); //alloc_bool( err != NULL );
 }
 
 static value hxlibnotify_notification_set_app_name( value n, value v ) {

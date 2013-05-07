@@ -18,11 +18,9 @@ class Notify {
 
 	public static function init( appName : String ) : Bool {
 		#if cpp
-		return _init( appName );
+		return ( _init( appName ) == 0 ) ? false : true;
 		#elseif neko
-		//TODO
-		//return _init( untyped appName.__s );
-		return neko.Lib.nekoToHaxe( _init( untyped appName.__s ) );
+		return ( _init( untyped appName.__s ) == 0 ) ? false : true;
 		#end
 	}
 	
@@ -31,7 +29,7 @@ class Notify {
 	}
 
 	public static inline function isInitted() : Bool {
-		return _is_initted();
+		return _is_initted() == 0 ? false : true;
 	}
 
 	public static inline function getAppName() : String {

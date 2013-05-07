@@ -44,7 +44,7 @@ class Notification {
 		#end
 	
 	public inline function show() : Bool
-		return _show( __i );
+		return _show( __i ) == 0 ? false : true;
 	
 	public static inline function setAppName( v : String ) {
 		#if cpp

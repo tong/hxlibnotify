@@ -36,11 +36,11 @@ ndll: $(NDLL)
 test: $(NDLL) test/TestLibnotify.hx
 	@(cd test;$(HX_TEST) -neko libnotify-test.n)
 	@(cd test;$(HX_TEST) -cpp bin)
-	mv test/bin/TestLibnotify test/libnotify-test
+	mv test/bin/TestLibnotify-debug test/libnotify-test
 	cp $(NDLL) test/
 
 doc: sys/*.hx
-	haxe -neko libinotify.n sys.ui.Notify sys.ui.Notification --no-output -xml libnotify-api.xml #TODO use macro to add doc classes
+	haxe -neko libinotify.n sys.ui.Notify sys.ui.Notification --no-output -xml libnotify-api.xml
 	mkdir -p doc
 	cd doc && haxedoc ../libnotify-api.xml -f sys.ui
 
