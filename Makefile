@@ -1,56 +1,63 @@
 
-#
-# hxlibnotify
-#
-# For debug build set: debug=true
-#
+##
+## hxlibnotify
+##
 
-OS = Linux
-NDLL_FLAGS =
+PROJECT=libnotify
+OS=$(shell sh -c 'uname -s 2>/dev/null || echo not')
+ARCH=$(shell sh -c 'uname -m 2>/dev/null || echo not')
+NDLL_FLAGS=
 
-uname_M := $(shell sh -c 'uname -m 2>/dev/null || echo not')
-ifeq (${uname_M},x86_64)
-OS := Linux64
-NDLL_FLAGS += -DHXCPP_M64
-HXCPP_FLAGS += -D HXCPP_M64
-else
-OS := Linux
+ifeq (${ARCH},x86_64)
+OS:=Linux64
+NDLL_FLAGS+=-DHXCPP_M64
+HXCPP_FLAGS+=-D HXCPP_M64
 endif
-NDLL = ndll/$(OS)/libnotify.ndll
-HX_TEST = haxe -main TestLibnotify -cp ../ $(HXCPP_FLAGS)
+
+NDLL=ndll/$(OS)/$(PROJECT).ndll
+HX_TEST=haxe -main TestLibnotify -cp ../ $(HXCPP_FLAGS)
 
 ifeq (${debug},true)
-HX_TEST += -debug
+HX_TEST+=-debug
 else
-HX_TEST += --no-traces -dce full
+HX_TEST+=--no-traces -dce full
 endif
 
-all: ndll test
+all: ndll example doc
 
-$(NDLL): src/*.cpp
+$(NDLL): src/*.cpp src/build.xml
 	(cd src;haxelib run hxcpp build.xml $(NDLL_FLAGS);)
 
 ndll: $(NDLL)
-	cp $(NDLL) test/
 
-test: $(NDLL) test/TestLibnotify.hx
-	@(cd test;$(HX_TEST) -neko libnotify-test.n)
-	@(cd test;$(HX_TEST) -cpp bin)
-	mv test/bin/TestLibnotify-debug test/libnotify-test
-	cp $(NDLL) test/
+example: $(NDLL) example/*.hx
+	@(cd example;$(HX_TEST) -neko test-libnotify.n)
+	@(cd example;$(HX_TEST) -cpp bin)
+	#mv test/bin/TestLibnotify-debug test/libnotify-test
 
-doc: sys/*.hx
-	haxe -neko libinotify.n sys.ui.Notify sys.ui.Notification --no-output -xml libnotify-api.xml
-	mkdir -p doc
-	cd doc && haxedoc ../libnotify-api.xml -f sys.ui
+doc: sys/ui/*.hx
+	@mkdir -p doc
+	@haxe sys.ui.Notify sys.ui.Notification -xml haxedoc.xml --no-output -neko api.n 
+	@(cd doc;haxelib run dox -i ../ -o ./;)
+
+hxlibnotify.zip: clean ndll
+	zip -r $@ ndll/ src/build.xml src/*.cpp src/build.xml example/ sys/ haxelib.json README
+
+haxelib: hxlibnotify.zip
+
+install: haxelib
+	haxelib local hxlibnotify.zip
+
+uninstall:
+	haxelib remove hxlibnotify
 
 clean:
-	rm -rf ndll/
+	rm -rf doc
+	rm -f $(NDLL)
 	rm -rf src/obj
 	rm -f src/all_objs
-	rm -rf test/bin
-	rm -f test/libnotify*
-	rm -rf doc
+	rm -rf example/bin
+	rm -f example/*.n
 
-.PHONY: ndll test doc clean
+.PHONY: all ndll example doc clean
 

@@ -1,0 +1,10 @@
+{
+	"name" : "hxlibnotify",
+	"url" : "https://github.com/tong/hxlibnotify",
+	"license" : "Public",
+	"tags" : ["libnotify","notify","notification","desktop","linux","gnome"],
+	"description" : "Cpp/Neko libnotify bindings",
+	"version" : "1.0.0-alpha",
+	"releasenote": "Init",
+	"contributors": ["tong"]
+}

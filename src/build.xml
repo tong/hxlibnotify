@@ -33,10 +33,12 @@
 	</files>
 
 	<target id="libnotify.ndll" tool="linker" toolid="dll" output="libnotify">
+		
 		<ext value=".ndll"/>
 		<outdir name="../ndll/${BINDIR}"/>
 		<flag value="${LIB_DIR}"/>
 		<files id="files"/>
+		
 		<lib name="-lnotify"/>
 		<lib name="-lgtk-3"/>
 		<lib name="-lgobject-2.0"/>
