@@ -36,12 +36,15 @@ class Notification {
 		#end
 	}
 	
-	public inline function update( summary : String, body : String, icon : String ) : Bool
+	public inline function update( summary : String, body : String, icon : String ) : Bool {
 		#if cpp
 		return _update( __i, summary, body, icon );
 		#elseif neko
 		return _update( __i, untyped summary.__s, untyped body.__s, untyped icon.__s );
+		#else
+		return throw 'not implemented';
 		#end
+	}
 	
 	public inline function show() : Bool
 		return _show( __i ) == 0 ? false : true;
@@ -54,31 +57,37 @@ class Notification {
 		#end
 	}
 	
-	public inline function setTimeout( v : Int )
+	public inline function setTimeout( v : Int ) {
 		_set_timeout( __i, v );
+	}
 
-	public inline function setCategory( v : String )
+	public inline function setCategory( v : String ) {
 		#if cpp
 		_set_catgeory( __i, v );
 		#elseif neko
 		_set_catgeory( __i, untyped v.__s );
 		#end
+	}
 
-	public inline function setUrgency( v : NotificationUrgency )
+	public inline function setUrgency( v : NotificationUrgency ) {
 		_set_urgency( __i, Type.enumIndex(v) );
+	}
 
-	public inline function addAction( action : String, label : String, cb : Void->Void, ?userData : Dynamic )
+	public inline function addAction( action : String, label : String, cb : Void->Void, ?userData : Dynamic ) {
 		#if cpp
 		_add_action( __i, action, action, cb, userData );
 		#elseif neko
 		_add_action( __i, untyped action.__s, untyped action.__s, cb, userData );
 		#end
+	}
 
-	public inline function close()
+	public inline function close() {
 		_close( __i );
+	}
 	
-	public inline function getClosedReason() : Int
+	public inline function getClosedReason() : Int {
 		return _get_closed_reason( __i );
+	}
 
 	static var _create = x( "create", 5 );
 	static var _update = x( "update", 4 );
@@ -97,6 +106,13 @@ class Notification {
 	static var _get_closed_reason = x( "get_closed_reason", 1 );
 	
 	static function x( f : String, args : Int = 0 ) : Dynamic {
+		#if cpp
 		return Lib.load( "libnotify", "hxlibnotify_notification_"+f, args );
+		#elseif neko
+		return Lib.load( "libnotify", "hxlibnotify_notification_"+f, args );
+		#else
+		return null;
+		#end
 	}
+	
 }

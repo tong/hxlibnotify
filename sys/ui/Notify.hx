@@ -1,11 +1,5 @@
 package sys.ui;
 
-#if cpp
-import cpp.Lib;
-#elseif neko
-import neko.Lib;
-#end
-
 typedef NotifyServerInfo = {
 	var name : String;
 	var vendor : String;
@@ -21,6 +15,8 @@ class Notify {
 		return ( _init( appName ) == 0 ) ? false : true;
 		#elseif neko
 		return ( _init( untyped appName.__s ) == 0 ) ? false : true;
+		#else
+		return throw 'not implemented';
 		#end
 	}
 	
@@ -49,6 +45,8 @@ class Notify {
 		return _get_server_caps();
 		#elseif neko
 		return neko.Lib.nekoToHaxe( _get_server_caps() );
+		#else
+		return null;
 		#end
 	}
 	
@@ -65,6 +63,12 @@ class Notify {
 	static var _get_server_info = x( "get_server_info" );
 	
 	static inline function x( f : String, n : Int = 0 ) : Dynamic {
-		return Lib.load( "libnotify", "hxlibnotify_"+f, n );
+		#if cpp
+		return cpp.Lib.load( "libnotify", "hxlibnotify_"+f, n );
+		#elseif neko
+		return neko.Lib.load( "libnotify", "hxlibnotify_"+f, n );
+		#else
+		return null;
+		#end
 	}
 }

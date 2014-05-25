@@ -1,0 +1,6 @@
+-cpp cpp
+-main TestLibnotify
+#-cp ../
+-lib libnotify
+#-D HXCPP_M64
+-cmd mv cpp/TestLibnotify ./

@@ -14,6 +14,7 @@ NDLL_FLAGS+=-DHXCPP_M64
 HXCPP_FLAGS+=-D HXCPP_M64
 endif
 
+SRC=sys/ui/*.hx
 NDLL=ndll/$(OS)/$(PROJECT).ndll
 HX_TEST=haxe -main TestLibnotify -cp ../ $(HXCPP_FLAGS)
 
@@ -31,17 +32,22 @@ $(NDLL): src/*.cpp src/build.xml
 ndll: $(NDLL)
 
 example: $(NDLL) example/*.hx
-	@(cd example;$(HX_TEST) -neko test-libnotify.n)
+	@(cd example;$(HX_TEST) -neko hxlibnotify.n)
 	@(cd example;$(HX_TEST) -cpp bin)
 	#mv test/bin/TestLibnotify-debug test/libnotify-test
 
-doc: sys/ui/*.hx
-	@mkdir -p doc
-	@haxe sys.ui.Notify sys.ui.Notification -xml haxedoc.xml --no-output -neko api.n 
-	@(cd doc;haxelib run dox -i ../ -o ./;)
+haxedoc.xml: $(SRC)
+	#haxe --no-output -neko api.n sys.ui.Notify sys.ui.Notification -xml libnotify-neko.xml
+	#haxe --no-output -cpp api sys.ui.Notify sys.ui.Notification -xml libnotify-cpp.xml
+	haxe sys.ui.Notify sys.ui.Notification -xml $@
+
+documentation: $(SRC)
+	#@mkdir -p doc
+	#@haxe sys.ui.Notify sys.ui.Notification -xml haxedoc.xml --no-output -neko api.n 
+	#@(cd doc;haxelib run dox -i ../ -o ./;)
 
 hxlibnotify.zip: clean ndll
-	zip -r $@ ndll/ src/build.xml src/*.cpp src/build.xml example/ sys/ haxelib.json README
+	zip -r $@ ndll/ src/build.xml src/*.cpp example/ sys/ haxedoc.xml haxelib.json README
 
 haxelib: hxlibnotify.zip
 
@@ -56,8 +62,9 @@ clean:
 	rm -f $(NDLL)
 	rm -rf src/obj
 	rm -f src/all_objs
-	rm -rf example/bin
+	rm -rf example/cpp
+	rm -f example/TestLibnotify
 	rm -f example/*.n
 
-.PHONY: all ndll example doc clean
+.PHONY: all ndll example documentation clean
 
