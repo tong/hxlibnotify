@@ -1,6 +1,10 @@
--cpp cpp
 -main TestLibnotify
-#-cp ../
 -lib libnotify
-#-D HXCPP_M64
+--each
+
+--next
+-neko test_libnotify.n
+
+--next
+-cpp cpp
 -cmd mv cpp/TestLibnotify ./

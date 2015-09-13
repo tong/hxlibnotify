@@ -1,0 +1,5 @@
+haxedoc.xml
+project/obj/*
+example/*.n
+example/bin
+*.zip

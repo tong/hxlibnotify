@@ -15,18 +15,24 @@ enum NotificationUrgency {
 @:require(sys)
 class Notification {
 
+	public static inline var EXPIRES_DEFAULT = -1;
+	public static inline var EXPIRES_NEVER = 0;
+
 	public static var defaultCategory = 'libnotify';
-	
+
 	var __i : Dynamic;
-	
+
 	public function new( summary : String, body : String, icon : String, timeout : Int = 3000, ?category : String ) {
+
 		if( category == null ) category = defaultCategory;
+
 		#if cpp
 		__i = _create( summary,
 					   body,
 					   (Sys.getCwd()+icon),
 					   timeout,
 					   category );
+
 		#elseif neko
 		__i = _create( untyped summary.__s,
 					   untyped body.__s,
@@ -35,7 +41,7 @@ class Notification {
 					   untyped category.__s );
 		#end
 	}
-	
+
 	public inline function update( summary : String, body : String, icon : String ) : Bool {
 		#if cpp
 		return _update( __i, summary, body, icon );
@@ -45,10 +51,10 @@ class Notification {
 		return throw 'not implemented';
 		#end
 	}
-	
+
 	public inline function show() : Bool
 		return _show( __i ) == 0 ? false : true;
-	
+
 	public static inline function setAppName( v : String ) {
 		#if cpp
 		_set_app_name();
@@ -56,7 +62,7 @@ class Notification {
 		_set_app_name( untyped v.__s );
 		#end
 	}
-	
+
 	public inline function setTimeout( v : Int ) {
 		_set_timeout( __i, v );
 	}
@@ -84,7 +90,7 @@ class Notification {
 	public inline function close() {
 		_close( __i );
 	}
-	
+
 	public inline function getClosedReason() : Int {
 		return _get_closed_reason( __i );
 	}
@@ -104,7 +110,7 @@ class Notification {
 	static var _clear_actions = x( "clear_actions", 1 );
 	static var _close = x( "close", 1 );
 	static var _get_closed_reason = x( "get_closed_reason", 1 );
-	
+
 	static function x( f : String, args : Int = 0 ) : Dynamic {
 		#if cpp
 		return Lib.load( "libnotify", "hxlibnotify_notification_"+f, args );
@@ -114,5 +120,5 @@ class Notification {
 		return null;
 		#end
 	}
-	
+
 }
