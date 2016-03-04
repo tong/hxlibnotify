@@ -12,7 +12,7 @@ NDLL_FLAGS+=-DHXCPP_M64
 HXCPP_FLAGS+=-D HXCPP_M64
 endif
 
-SRC=src/sys/ui/*.hx
+SRC=src/sys/ui/*.hx Makefile
 NDLL=ndll/$(OS)/$(PROJECT).ndll
 HX_TEST=haxe -main TestLibnotify -cp ../ $(HXCPP_FLAGS)
 
@@ -35,19 +35,17 @@ ndll: $(NDLL)
 	#mv test/bin/TestLibnotify-debug test/libnotify-test
 
 haxedoc.xml: $(SRC)
-	#haxe --no-output -neko api.n sys.ui.Notify sys.ui.Notification -xml libnotify-neko.xml
-	#haxe --no-output -cpp api sys.ui.Notify sys.ui.Notification -xml libnotify-cpp.xml
-	haxe sys.ui.Notify sys.ui.Notification -xml $@ -cp src
+	haxe --no-output -xml $@ -cp src sys.ui.Notify sys.ui.Notification
 
 #documentation: $(SRC)
 	#@mkdir -p doc
 	#@haxe sys.ui.Notify sys.ui.Notification -xml haxedoc.xml --no-output -neko api.n
 	#@(cd doc;haxelib run dox -i ../ -o ./;)
 
-hxlibnotify.zip: clean ndll haxedoc.xml
+libnotify.zip: clean ndll haxedoc.xml
 	zip -r $@ ndll/ src/ haxedoc.xml haxelib.json README.md
 
-haxelib: hxlibnotify.zip
+haxelib: libnotify.zip
 
 install: haxelib
 	haxelib local hxlibnotify.zip

@@ -11,13 +11,14 @@ typedef NotifyServerInfo = {
 class Notify {
 
 	public static function init( appName : String ) : Bool {
-		#if cpp
-		return ( _init( appName ) == 0 ) ? false : true;
-		#elseif neko
-		return ( _init( untyped appName.__s ) == 0 ) ? false : true;
-		#else
-		return throw 'not implemented';
-		#end
+		return
+			#if cpp
+			(_init( appName) == 0 ) ? false : true;
+			#elseif neko
+			(_init( untyped appName.__s) == 0 ) ? false : true;
+			#else
+			throw 'not implemented';
+			#end
 	}
 
 	public static inline function uninit() {
@@ -41,13 +42,7 @@ class Notify {
 	}
 
 	public static inline function getServerCaps() : Array<String> {
-		#if cpp
 		return _get_server_caps();
-		#elseif neko
-		return neko.Lib.nekoToHaxe( _get_server_caps() );
-		#else
-		return null;
-		#end
 	}
 
 	public static inline function getServerInfo() : NotifyServerInfo {
@@ -63,12 +58,13 @@ class Notify {
 	static var _get_server_info = x( "get_server_info" );
 
 	static inline function x( f : String, n : Int = 0 ) : Dynamic {
-		#if cpp
-		return cpp.Lib.load( "libnotify", "hxlibnotify_"+f, n );
-		#elseif neko
-		return neko.Lib.load( "libnotify", "hxlibnotify_"+f, n );
-		#else
-		return null;
-		#end
+		return
+			#if cpp
+			cpp.Lib.load( "libnotify", "hxlibnotify_"+f, n );
+			#elseif neko
+			neko.Lib.load( "libnotify", "hxlibnotify_"+f, n );
+			#else
+			null;
+			#end
 	}
 }

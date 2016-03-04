@@ -1,5 +1,7 @@
 haxedoc.xml
 project/obj/*
-example/*.n
+example/app*
 example/bin
 *.zip
+example/cpp/
+TODO.md

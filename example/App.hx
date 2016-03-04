@@ -3,11 +3,15 @@ import Sys.println;
 import sys.ui.Notify;
 import sys.ui.Notification;
 
-class TestLibnotify {
+class App {
 
 	static function main() {
 
-		var appName = "hxlibnotify-test";
+		#if neko
+		cpp.Prime.nekoInit( "../ndll/Linux64/libnotify" );
+		#end
+
+		var appName = "libnotify-test";
 
 		if( !Notify.init( appName ) ) {
 			println( 'Failed to initialize libnotify' );
@@ -19,8 +23,8 @@ class TestLibnotify {
 		println( "Server capabilities : "+Notify.getServerCaps() );
 		println( "Server info : "+Notify.getServerInfo() );
 
-		var n = new Notification( "HXLibnotify", "Bruce Willis is dead", "./haxe.png", 3 );
-		//n.setUrgency( NotificationUrgency.critical );
+		var n = new Notification( "HXLibnotify", "Bruce Willis Is Dead", "./haxe.png", 3 );
+		n.setUrgency( NotificationUrgency.critical );
 		n.setTimeout( Notification.EXPIRES_DEFAULT );
 		n.show();
 

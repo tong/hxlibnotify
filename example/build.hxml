@@ -1,10 +1,10 @@
--main TestLibnotify
+-main App
 -lib libnotify
 --each
 
 --next
--neko test_libnotify.n
+-neko app.n
 
 --next
 -cpp cpp
--cmd mv cpp/TestLibnotify ./
+-cmd mv cpp/App app
