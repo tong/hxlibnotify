@@ -1,0 +1,13 @@
+language: haxe
+
+os:
+  - linux
+
+haxe:
+  - "3.2.1"
+  - development
+
+script:
+  - haxelib git libnotify https://github.com/tong/hxlibnotify
+  #- make ndll
+  - haxe doc.hxml
