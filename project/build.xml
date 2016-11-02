@@ -7,15 +7,18 @@
 	<include name="${HXCPP}/build-tool/BuildCommon.xml"/>
 
 	<set name="DBG" value="d" if="debug" />
+	<!--
 	<set name="ROOT" value="../" unless="ROOT"/>
+	-->
 
 	<files id="files">
 
 		<compilerflag value="-pthread"/>
-		
+
 		<compilerflag value="-I/usr/lib/x86_64-linux-gnu/glib-2.0/include" if="HXCPP_M64"/>
 		<compilerflag value="-I/usr/lib/i386-linux-gnu/glib-2.0/include" unless="HXCPP_M64"/>
 
+		<compilerflag value="-I/usr/lib/glib-2.0/include"/>
 		<compilerflag value="-I/usr/include/glib-2.0"/>
 		<compilerflag value="-I/usr/include/gdk-pixbuf-2.0"/>
 		<compilerflag value="-I/usr/include/libpng12"/>
@@ -29,16 +32,16 @@
 		<compilerflag value="-I/usr/include/pixman-1"/>
 
 		<file name="hxlibnotify.cpp"/>
-		
+
 	</files>
 
 	<target id="libnotify.ndll" tool="linker" toolid="dll" output="libnotify">
-		
-		<ext value=".ndll"/>
-		<outdir name="../ndll/${BINDIR}"/>
-		<flag value="${LIB_DIR}"/>
 		<files id="files"/>
-		
+		<ext value=".ndll"/>
+		<outdir name="./../ndll/${BINDIR}"/>
+		<!--
+		<flag value="${LIB_DIR}"/>
+		-->
 		<lib name="-lnotify"/>
 		<lib name="-lgtk-3"/>
 		<lib name="-lgobject-2.0"/>
@@ -47,7 +50,6 @@
 
 	<target id="default">
 		<target id="libnotify.ndll"/>
-
 	</target>
 
 </xml>
