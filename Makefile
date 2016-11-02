@@ -29,11 +29,6 @@ $(NDLL): project/*.cpp project/build.xml
 
 ndll: $(NDLL)
 
-#example: $(NDLL) example/*.hx
-	#@(cd example;$(HX_TEST) -neko hxlibnotify.n)
-	#@(cd example;$(HX_TEST) -cpp bin)
-	#mv test/bin/TestLibnotify-debug test/libnotify-test
-
 haxedoc.xml: $(SRC)
 	haxe --no-output -xml $@ -cp src sys.ui.Notify sys.ui.Notification
 

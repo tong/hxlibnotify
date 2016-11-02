@@ -1,7 +1,7 @@
-haxedoc.xml
-project/obj/*
 example/app*
-example/bin
-*.zip
 example/cpp/
-TODO.md
+doc/
+ndll/*/*.hash
+project/obj/*
+*.zip
+haxedoc.xml

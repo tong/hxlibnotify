@@ -1,0 +1,13 @@
+--no-output
+-lib libnotify
+sys.ui.Notification
+sys.ui.Notify
+--each
+
+--next
+-cpp _
+-xml doc/cpp.xml
+
+--next
+-neko _
+-xml doc/neko.xml

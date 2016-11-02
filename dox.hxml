@@ -1,0 +1,1 @@
+-cmd haxelib run dox -i doc/ -o doc/ -in sys.ui.* --title HXLibnotify -D version 1.0.0-alpha.4 -D source-path https://github.com/tong/hxlibnotify/tree/master/src

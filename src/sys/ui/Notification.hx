@@ -7,11 +7,29 @@ import neko.Lib;
 #end
 
 enum NotificationUrgency {
+
+	/**
+		Low urgency. Used for unimportant notifications.
+	*/
 	low;
+
+	/**
+		Normal urgency. Used for most standard notifications.
+	*/
 	normal;
+
+	/**
+		Critical urgency. Used for very important notifications.
+	*/
 	critical;
 }
 
+/**
+	Represents a passive pop-up notification.
+	It can contain summary text, body text, and an icon, as well as hints specifying how the notification should be presented.
+	The notification is rendered by a notification daemon, and may present the notification in any number of ways.
+	As such, there is a clear separation of content and presentation, and this API enforces that.
+*/
 @:require(sys)
 class Notification {
 
@@ -42,6 +60,9 @@ class Notification {
 		#end
 	}
 
+	/**
+		Updates the notification text and icon. This won't send the update out and display it on the screen. For that, you will need to call
+	*/
 	public inline function update( summary : String, body : String, icon : String ) : Bool {
 		#if cpp
 		return _update( __i, summary, body, icon );
@@ -52,9 +73,15 @@ class Notification {
 		#end
 	}
 
+	/**
+		Tells the notification server to display the notification on the screen.
+	*/
 	public inline function show() : Bool
 		return _show( __i ) == 0 ? false : true;
 
+	/**
+		Sets the application name for the notification.
+	*/
 	public static inline function setAppName( v : String ) {
 		#if cpp
 		_set_app_name();
@@ -63,10 +90,17 @@ class Notification {
 		#end
 	}
 
+	/**
+		Sets the timeout of the notification.
+	*/
 	public inline function setTimeout( v : Int ) {
 		_set_timeout( __i, v );
 	}
 
+	/**
+		Sets the category of this notification.
+		This can be used by the notification server to filter or display the data in a certain way.
+	*/
 	public inline function setCategory( v : String ) {
 		#if cpp
 		_set_catgeory( __i, v );
@@ -75,10 +109,17 @@ class Notification {
 		#end
 	}
 
+	/**
+		Sets the urgency level of this notification.
+	*/
 	public inline function setUrgency( v : NotificationUrgency ) {
 		_set_urgency( __i, Type.enumIndex(v) );
 	}
 
+	/**
+		Adds an action to a notification.
+		When the action is invoked, the specified callback function will be called, along with the value passed to user_data.
+	*/
 	public inline function addAction( action : String, label : String, cb : Void->Void, ?userData : Dynamic ) {
 		#if cpp
 		_add_action( __i, action, action, cb, userData );
@@ -87,10 +128,17 @@ class Notification {
 		#end
 	}
 
+	/**
+		Synchronously tells the notification server to hide the notification on the screen.
+	*/
 	public inline function close() {
 		_close( __i );
 	}
 
+	/**
+		Returns the closed reason code for the notification.
+		This is valid only after the "closed" signal is emitted.
+	*/
 	public inline function getClosedReason() : Int {
 		return _get_closed_reason( __i );
 	}

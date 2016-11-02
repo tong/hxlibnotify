@@ -1,5 +1,6 @@
 -main App
 -lib libnotify
+-dce full
 --each
 
 --next

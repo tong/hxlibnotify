@@ -10,6 +10,10 @@ typedef NotifyServerInfo = {
 @:require(sys)
 class Notify {
 
+	/**
+		Init libnotify.
+		This must be called before any other functions.
+	*/
 	public static function init( appName : String ) : Bool {
 		return
 			#if cpp
@@ -21,18 +25,30 @@ class Notify {
 			#end
 	}
 
+	/**
+		This should be called when the program no longer needs libnotify for the rest of its lifecycle, typically just before exitting.
+	*/
 	public static inline function uninit() {
 		_uninit();
 	}
 
+	/**
+		Gets whether or not libnotify is initialized.
+	*/
 	public static inline function isInitted() : Bool {
 		return _is_initted() == 0 ? false : true;
 	}
 
+	/**
+		Gets the application name registered.
+	*/
 	public static inline function getAppName() : String {
 		return _get_app_name();
 	}
 
+	/**
+		Sets the application name.
+	*/
 	public static inline function setAppName( v : String ) {
 		#if cpp
 		_set_app_name();
@@ -41,10 +57,16 @@ class Notify {
 		#end
 	}
 
+	/**
+		Synchronously queries the server for its capabilities
+	*/
 	public static inline function getServerCaps() : Array<String> {
 		return _get_server_caps();
 	}
 
+	/**
+		Synchronously queries the server for its information, specifically, the name, vendor, server version, and the version of the notifications specification that it is compliant with.
+	*/
 	public static inline function getServerInfo() : NotifyServerInfo {
 		return _get_server_info();
 	}
